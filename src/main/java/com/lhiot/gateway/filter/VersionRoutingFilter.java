@@ -16,6 +16,7 @@ import java.net.URI;
 
 /**
  * 版本路由过滤器，用于根据HTTP Header中的version路由到对应版本微服务
+ *
  * @author Leon (234239150@qq.com) created in 17:42 18.10.7
  */
 @Slf4j
@@ -33,12 +34,12 @@ public class VersionRoutingFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        if (ServerWebExchangeUtils.isAlreadyRouted(exchange)){
+        if (ServerWebExchangeUtils.isAlreadyRouted(exchange)) {
             return chain.filter(exchange);
         }
 
         String version = exchange.getRequest().getHeaders().getFirst(HTTP_HEADER_VERSION_ROUTE_KEY);
-        if (StringUtils.isBlank(version)){
+        if (StringUtils.isBlank(version)) {
             return chain.filter(exchange);
         }
 
@@ -47,7 +48,7 @@ public class VersionRoutingFilter implements GlobalFilter, Ordered {
         }
         URI uri = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR);
         if (uri == null) {
-            log.warn("VersionRoutingFilter: URI is null. running next filter..." );
+            log.warn("VersionRoutingFilter: URI is null. running next filter...");
             return chain.filter(exchange);
         }
         String uriStr = uri.toString();
